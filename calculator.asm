@@ -12,11 +12,20 @@ global _start
 
 _start:
 
-mov eax, 4
-mov ebx, 1
-mov ecx, msg1
-mov edx, msg1_len
-int 80h
+display_message:
+	push ebp
+	mov ebp, esp
+	mov eax, 4
+	mov ebx, 1
+	mov ecx, msg1
+	mov edx, msg1_len
+	int 80h
+	mov esp, ebp
+	pop ebp
+	ret
+
+call display_message
+add esp, 8
 
 mov eax, 1
 mov ebx, 0
