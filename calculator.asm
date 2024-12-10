@@ -53,6 +53,7 @@ ICANON: equ 1<<1
 ECHO: equ 1<<3
 ;we store the choice of the user here
 chr: resb 1
+
 ;These variables are the numbers so we reserve 4 bytes each (1 doubleword)
 num1: resd 1
 num2: resd 1
@@ -80,10 +81,10 @@ main:
   
   mov eax, 3
   mov ebx, 0
-  mov ecx, chr
+  mov ecx, num1
   mov edx, 1
   int 80h
-
+  
   ;set canonical and echo back so the user can type normally	  
   call canonical_on
   call echo_on
@@ -102,13 +103,10 @@ main:
   push result
   call display_result  
   add esp, 1
-  	
-  ;clear eax
-  xor eax, eax
-  
+  	 
   ;exit with code 0
   mov eax, 1
-  mov ebx, 0
+  xor ebx, ebx
   int 80h
 
 write_stdin_termios:
@@ -183,12 +181,14 @@ get_numbers:
   mov ecx, [esp + 8]
   mov edx, 4
   int 80h
+  
   ;display second number message
   mov eax, 4
   mov ebx, 1
   mov ecx, enterSecondNumberMessage
   mov edx, enterSecondNumberMessage_len
   int 80h
+  
   ;read second number
   mov eax, 3
   mov ebx, 0
@@ -204,9 +204,7 @@ addition:
   
   push ebp
   mov ebp, esp
- 
   
-   
   ;store arguments to eax and ebx
   mov eax, [ebp + 8]
   ;convert char to int
@@ -228,8 +226,7 @@ addition:
 display_result:
   push ebp
   mov ebp, esp
-  
-    
+      
   mov eax, 4
   mov ebx, 1
   mov ecx, resultMessage
@@ -244,8 +241,4 @@ display_result:
   
   mov esp, ebp
   pop ebp
-  ret 
-
-
-  
-  
+  ret  
